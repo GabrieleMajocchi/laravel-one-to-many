@@ -46,6 +46,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
+                            <th scope="col">Author</th>
                             <th scope="col">Title</th>
                             <th scope="col">Description</th>
                             <th scope="col">Programming Language</th>
@@ -60,6 +61,9 @@
                                 <th scope="row">
                                     {{ $project->id }}
                                 </th>
+                                <td>
+                                    {{ $project->user->name }}
+                                </td>
                                 <td>
                                     {{ $project->title }}
                                 </td>
