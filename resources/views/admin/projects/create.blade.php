@@ -31,6 +31,12 @@
                 </label>
                 <input type="text" class="form-control" id="title" name="title" value="{{ old('title', '') }}">
             </div>
+            <select class="col-6 rounded text-secondary bg-transparent" name="type_id">
+                <option selected>Type of project</option>
+                @foreach ($types as $type)
+                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                @endforeach
+            </select>
             <div class="mb-3">
                 <label for="description" class="form-label">
                     Description:

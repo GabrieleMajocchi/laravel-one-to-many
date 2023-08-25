@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Type;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('admin.projects.create');
+        $types = Type::all();
+        return view('admin.projects.create', compact('types'));
     }
 
     /**
@@ -41,10 +43,12 @@ class ProjectController extends Controller
             'description'=> 'required|min:3|max:255',
             'lang'=> 'required|min:3|max:255',
             'link'=> 'required|unique:projects|min:5|max:255',
-            'image' => ['image', 'max:512']
+            'image' => ['image', 'max:512'],
+            'type_id'=> ['required']
         ]);
 
         $data['date'] = $request->date;
+        $data['user_id'] = Auth::user()->id;
 
         if ($request->hasFile('image')){
             $img_path = Storage::put('uploads/projects', $request['image']);
@@ -52,7 +56,6 @@ class ProjectController extends Controller
         }
 
         $newProject = Project::create($data);
-        $newProject->user_id = Auth::user()->id;
         $newProject->save();
         return redirect()->route('projects.show', $newProject->id)->with('stored', $newProject->title);
     }
@@ -73,8 +76,8 @@ class ProjectController extends Controller
     public function edit(string $id)
     {
         $project = Project::findOrFail($id);
-
-        return view('admin.projects.edit', compact('project'));
+        $types = Type::all();
+        return view('admin.projects.edit', compact('project'), compact('types'));
     }
 
     /**
@@ -87,7 +90,8 @@ class ProjectController extends Controller
             'description'=> ['required', 'min:3', 'max:255'],
             'lang'=> ['required', 'min:3', 'max:255'],
             'link'=> ['required', 'min:5', 'max:255', Rule::unique('projects')->ignore($project->id)],
-            'image' => ['image', 'max:512']
+            'image' => ['image', 'max:512'],
+            'type_id'=> ['required']
         ]);
 
         $data['date'] = $request->date;
