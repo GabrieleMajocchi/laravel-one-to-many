@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,6 +17,8 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::paginate(10);
+
+        $posts = Project::where('user_id',Auth::user()->id)->paginate(10);
 
         return view('admin.projects.index', compact('projects'));
     }
@@ -49,6 +52,7 @@ class ProjectController extends Controller
         }
 
         $newProject = Project::create($data);
+        $newProject->user_id = Auth::user()->id;
         $newProject->save();
         return redirect()->route('projects.show', $newProject->id)->with('stored', $newProject->title);
     }
