@@ -21,7 +21,13 @@
             @endif
 
             <p>
+                Project Author: {{ $project->user->name}}
+            </p>
+            <p>
                 Project Name: {{ $project->title }}
+            </p>
+            <p>
+                Type: {{ $project->type->name }}
             </p>
             <p>
                 Description: {{ $project->description }}
